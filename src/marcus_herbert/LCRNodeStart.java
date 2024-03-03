@@ -7,7 +7,9 @@ public class LCRNodeStart extends LCRNode implements Runnable{
         super(id);
     }
 
+
     public void run(){
+        int largestId;
         int leftId;
         char[] messageArr;
         System.out.println("Start");
@@ -28,8 +30,8 @@ public class LCRNodeStart extends LCRNode implements Runnable{
                         leftId = leftId*10+Character.getNumericValue(c);
                     }
                 }
-                setId(Math.max(getId(), leftId));
-                getRight().receiveMessage("Left is " + getId());
+                largestId = Math.max(getId(), leftId);
+                getRight().receiveMessage("Left is " + largestId);
             }
         }
     }

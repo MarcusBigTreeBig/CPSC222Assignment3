@@ -22,6 +22,7 @@ public class LCRNode implements Runnable{
     }
 
     public void run(){
+        int largestId;
         int leftId;
         char[] messageArr;
         while(true){
@@ -40,8 +41,8 @@ public class LCRNode implements Runnable{
                         leftId = leftId*10+Character.getNumericValue(c);
                     }
                 }
-                setId(Math.max(id, leftId));
-                right.receiveMessage("Left is " + id);
+                largestId = Math.max(id, leftId);
+                right.receiveMessage("Left is " + largestId);
             }
         }
     }
