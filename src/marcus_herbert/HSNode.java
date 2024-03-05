@@ -14,7 +14,7 @@ public class HSNode implements Runnable{
     private BlockingQueue<String> messages;
 
     public HSNode(int id){
-        messages = new ArrayBlockingQueue<>(5);
+        messages = new ArrayBlockingQueue<>(20);
         this.id = id;
     }
 
@@ -42,84 +42,101 @@ public class HSNode implements Runnable{
         int returning = 0;
         int distance = 0;
         int originalSender = 0;
+        int tempId = 0;
         boolean sendLeft = false;
         boolean sendRight = false;
         int i = 0;
         char[] arr = s.toCharArray();
-        while (!isDigit(arr[i])) {
-            i++;
-        }
-        while (isDigit(arr[i])) {
-            isRight = isRight*10+Character.getNumericValue(arr[i]);
-            i++;
-        }
-        while (!isDigit(arr[i])) {
-            i++;
-        }
-        while (isDigit(arr[i])) {
-            largestId = Math.max(largestId, largestId*10+Character.getNumericValue(arr[i]));
-            i++;
-        }
-        while (!isDigit(arr[i])) {
-            i++;
-        }
-        while (isDigit(arr[i])) {
-            returning = returning*10+Character.getNumericValue(arr[i]);
-            i++;
-        }
-        while (!isDigit(arr[i])) {
-            i++;
-        }
-        while (isDigit(arr[i])) {
-            distance = distance*10+Character.getNumericValue(arr[i]);
-            i++;
-        }
-        while (!isDigit(arr[i])) {
-            i++;
-        }
-        while (isDigit(arr[i])) {
-            originalSender = originalSender*10+Character.getNumericValue(arr[i]);
-            i++;
-        }
-        if (returning == 1) {
-            if (originalSender == id) {
-                sendLeft = true;
-                sendRight = true;
-                distance++;
-                returning = 0;
-                originalSender = id;
+        if (s.substring(0, 5).equals("Start")) {
+            while (!isDigit(arr[i])) {
+                i++;
+            }
+            while (isDigit(arr[i])) {
+                isRight = isRight*10+Character.getNumericValue(arr[i]);
+                i++;
+            }
+            if (isRight == 1) {
+                right.receiveMessage("Start 1.");
             }else{
-                if (isRight == 1) {
-                    sendLeft = true;
-                }else{
-                    sendRight = true;
-                }
-                distance++;
+                right.receiveMessage("Start 0.");
             }
-        }
-        else{
-            if (distance == 0) {
-                returning = 1;
-                if (isRight == 1) {
-                    sendRight = true;
-                }else{
+            getRight().receiveMessage("Right(zero or one): " + 0 + " is: " + getId() + " Returning (zero or one): " + 0 + " Distance: " + 1 + " Original Sender: " + getId() + ".");
+            getLeft().receiveMessage("Right(zero or one): " + 0 + " is: " + getId() + " Returning (zero or one): " + 0 + " Distance: " + 1 + " Original Sender: " + getId() + ".");
+        }else {
+            while (!isDigit(arr[i])) {
+                i++;
+            }
+            while (isDigit(arr[i])) {
+                isRight = isRight*10+Character.getNumericValue(arr[i]);
+                i++;
+            }
+            while (!isDigit(arr[i])) {
+                i++;
+            }
+            while (isDigit(arr[i])) {
+                tempId = tempId*10+Character.getNumericValue(arr[i]);
+                i++;
+            }
+            while (!isDigit(arr[i])) {
+                i++;
+            }
+            while (isDigit(arr[i])) {
+                returning = returning*10+Character.getNumericValue(arr[i]);
+                i++;
+            }
+            while (!isDigit(arr[i])) {
+                i++;
+            }
+            while (isDigit(arr[i])) {
+                distance = distance*10+Character.getNumericValue(arr[i]);
+                i++;
+            }
+            while (!isDigit(arr[i])) {
+                i++;
+            }
+            while (isDigit(arr[i])) {
+                originalSender = originalSender*10+Character.getNumericValue(arr[i]);
+                i++;
+            }
+            largestId = Math.max(tempId, largestId);
+            if (returning == 1) {
+                if (originalSender == id) {
                     sendLeft = true;
+                    sendRight = true;
+                    distance++;
+                    returning = 0;
+                    originalSender = id;
+                } else {
+                    if (isRight == 1) {
+                        sendLeft = true;
+                    } else {
+                        sendRight = true;
+                    }
+                    distance++;
+                }
+            } else {
+                if (distance == 0) {
+                    returning = 1;
+                    if (isRight == 1) {
+                        sendRight = true;
+                    } else {
+                        sendLeft = true;
+                    }
+                } else {
+                    if (isRight == 1) {
+                        sendLeft = true;
+                    } else {
+                        sendRight = true;
+                    }
+                    distance--;
                 }
             }
-            else{
-                if (isRight == 1) {
-                    sendLeft = true;
-                }else{
-                    sendRight = true;
-                }
-                distance--;
+            if (sendLeft) {
+                right.receiveMessage("Right(zero or one): " + 0 + " is: " + largestId + " Returning (zero or one): " + returning + " Distance: " + distance + " Original Sender: " + originalSender + ".");
             }
-        }
-        if (sendLeft) {
-            right.receiveMessage("Right(zero or one): " + 0 + " is: " + largestId + " Returning (zero or one): " + returning + " Distance: " + distance + " Original Sender: " + originalSender + ".");
-        }
-        if (sendRight) {
-            left.receiveMessage("Right(zero or one): " + 1 + " is: " + largestId + " Returning (zero or one): " + returning + " Distance: " + distance + " Original Sender: " + originalSender + ".");
+            if (sendRight) {
+                left.receiveMessage("Right(zero or one): " + 1 + " is: " + largestId + " Returning (zero or one): " + returning + " Distance: " + distance + " Original Sender: " + originalSender + ".");
+            }
         }
     }
 
