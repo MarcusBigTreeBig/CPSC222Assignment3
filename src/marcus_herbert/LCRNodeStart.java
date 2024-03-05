@@ -2,12 +2,25 @@ package marcus_herbert;
 
 import static java.lang.Character.isDigit;
 
+/**
+ * Based on code written by Colton Aarts
+ *
+ * Implements a start node for the LCR algorithm of leader election for distributed systems
+ * Sends messages containing the largest ID it has seen
+ * At the start, sends an initial message to start the algorithm.
+ */
+
 public class LCRNodeStart extends LCRNode implements Runnable{
     public LCRNodeStart(int id){
         super(id);
     }
 
-
+    /**
+     * If algorithm hasn't started yet, sends an initial message to the node on it's left.
+     *
+     * Takes messages it has received
+     * If the ID from the message is larger than the largest one it has seen so far, it keeps that as the largest ID it has seen
+     */
     public void run(){
         int largestId;
         int leftId;

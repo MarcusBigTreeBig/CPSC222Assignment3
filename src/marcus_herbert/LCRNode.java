@@ -5,6 +5,13 @@ import java.util.concurrent.BlockingQueue;
 
 import static java.lang.Character.isDigit;
 
+/**
+ * Based on code written by Colton Aarts
+ *
+ * Implements a node for the LCR algorithm of leader election for distributed systems
+ * Sends messages containing the largest ID it has seen
+ */
+
 public class LCRNode implements Runnable{
     private LCRNode left;
     private LCRNode right;
@@ -21,6 +28,10 @@ public class LCRNode implements Runnable{
         messages.add(mess);
     }
 
+    /**
+     * Takes messages it has received
+     * If the ID from the message is larger than the largest one it has seen so far, it keeps that as the largest ID it has seen
+     */
     public void run(){
         int largestId;
         int leftId;
@@ -37,7 +48,7 @@ public class LCRNode implements Runnable{
                 leftId = 0;
                 messageArr = s.toCharArray();
                 for (char c: messageArr) {
-                    if (isDigit(c)) {
+                    if (isDigit(c)) {//determine the ID sent by the message
                         leftId = leftId*10+Character.getNumericValue(c);
                     }
                 }

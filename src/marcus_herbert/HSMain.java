@@ -2,6 +2,14 @@ package marcus_herbert;
 
 import java.util.ArrayList;
 
+/**
+ * Based on code written by Colton Aarts
+ *
+ * Tests the HS algorithm for leader election of distributed systems
+ * Creates nodes in a ring, and has a start node that starts the communication of the algorithm so that
+ * other nodes continue to send messages.
+ */
+
 public class HSMain {
     public static void main(String[] args) {
         ArrayList<HSNode> nodes = new ArrayList<>();
